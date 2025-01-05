@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2025-01-05T17:06:38Z"
+  labels:
+    app: deploy1-nginx
+  name: deploy1-nginx
+  namespace: deploy
+  resourceVersion: "24749"
+  uid: 727ef7cb-9296-4d51-89e1-7073fb6bcbfd
+spec:
+  clusterIP: 10.106.156.79
+  clusterIPs:
+  - 10.106.156.79
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: deploy1-nginx
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+

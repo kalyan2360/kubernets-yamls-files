@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: demo1
+  name: initial-pod 
+spec:
+  containers:
+  - image: kalyankumar1996/projectdemo2
+    name: demo1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

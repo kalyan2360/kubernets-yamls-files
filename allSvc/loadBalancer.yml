@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: deploy-nginx
+  name: deploy-nginx
+  namespace: deploy
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 9095
+  selector:
+    app: deploy-nginx
+  type: LoadBalancer
+status:
+  loadBalancer: {}

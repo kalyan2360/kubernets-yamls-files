@@ -1,0 +1,50 @@
+name: kubectl
+version: {{snap_version}}
+summary: kubectl controls the Kubernetes cluster manager.
+description: |
+  kubectl is a command line interface for running commands against Kubernetes
+  clusters.
+grade: stable
+confinement: classic
+{% if base %}
+base: {{ base }}
+{% endif %}
+
+apps:
+  kubectl:
+    command: kubectl
+
+parts:
+  kubectl:
+    source: .
+    source-type: local
+    plugin: dump
+    build-snaps:
+      - {{go_version}}
+    build-packages:
+      - make
+      - mercurial
+      - git
+      - rsync
+    build-attributes: [no-patchelf]
+    override-build: |
+      export GOPATH=$(dirname $SNAPCRAFT_PART_INSTALL)/go
+      mkdir -p $GOPATH
+
+      KUBEREPO="github.com/kubernetes/kubernetes"
+      rm -rf "$GOPATH/src/$KUBEREPO"
+      git clone "https://$KUBEREPO" --branch v{{snap_version}} --depth 1 "$GOPATH/src/$KUBEREPO"
+
+      cd $GOPATH/src/$KUBEREPO
+
+      {% if patches %}
+      {% for patch in patches %}
+      git apply --stat $SNAPCRAFT_PART_BUILD/{{patch}}
+      {% endfor %}
+      {% endif %}
+      export FORCE_HOST_GO=y
+      make clean && make WHAT=cmd/kubectl
+      cd $SNAPCRAFT_PART_INSTALL
+      cp $GOPATH/src/$KUBEREPO/_output/bin/kubectl .
+
+      snapcraftctl build
